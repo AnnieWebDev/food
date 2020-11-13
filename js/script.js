@@ -70,26 +70,26 @@ window.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    function getZero (num){
-        if(num >= 0 && num< 10){
+    function getZero(num) {
+        if (num >= 0 && num < 10) {
             return `0${num}`;
-        }else{
+        } else {
             return num;
         }
     }
 
-    function setClock (selector, endtime){
+    function setClock(selector, endtime) {
 
         const timer = document.querySelector(selector),
-        days = timer.querySelector('#days'),
-        hours = timer.querySelector('#hours'),
-        minutes = timer.querySelector('#minutes'),
-        seconds = timer.querySelector('#seconds'),
-        timeInterval = setInterval(upDateClock, 1000);
+            days = timer.querySelector('#days'),
+            hours = timer.querySelector('#hours'),
+            minutes = timer.querySelector('#minutes'),
+            seconds = timer.querySelector('#seconds'),
+            timeInterval = setInterval(upDateClock, 1000);
 
         upDateClock();
 
-        function upDateClock (){
+        function upDateClock() {
             const t = getTimeRemaning(endtime);
 
             days.innerHTML = getZero(t.days);
@@ -97,7 +97,7 @@ window.addEventListener('DOMContentLoaded', () => {
             minutes.innerHTML = getZero(t.minutes);
             seconds.innerHTML = getZero(t.seconds);
 
-            if(t.total <= 0){
+            if (t.total <= 0) {
                 clearInterval(timeInterval);
             }
 
@@ -105,8 +105,78 @@ window.addEventListener('DOMContentLoaded', () => {
 
     }
 
-    setClock('.timer',deadLine);
+    setClock('.timer', deadLine);
 
-    
+    //MODAL
+
+    // const modalWhite = document.querySelector('.btn_white'),
+    //     modalDark = document.querySelector('.btn_dark'),
+    //     modalWindow = document.querySelector('.modal'),
+    //     modalClose = document.querySelector('.modal__close');
+
+
+    // modalWhite.addEventListener('click', () => {
+    //     modalWindow.style.display = 'block';
+    // });
+
+    // modalDark.addEventListener('click', () => {
+    //     modalWindow.style.display = 'block';
+    // });
+
+    // modalClose.addEventListener('click', () => {
+    //     modalWindow.style.display = 'none';
+    // });
+
+
+    const modalTrigger = document.querySelectorAll('[data-modal]'),
+        modal = document.querySelector('.modal'),
+        modalCloseBtn = document.querySelector('[data-close');
+
+
+    function openModal() {
+        modal.classList.add('show');
+        modal.classList.remove('hide');
+        document.body.style.overflow = 'hidden';
+        clearInterval(modalTimerId);
+    }
+
+    modalTrigger.forEach(btn => {
+
+        btn.addEventListener('click', openModal);
+    });
+
+
+
+    function closeModal() {
+        modal.classList.add('hide');
+        modal.classList.remove('show');
+        document.body.style.overflow = 'visible';
+    }
+
+    modalCloseBtn.addEventListener('click', closeModal);
+
+
+    modal.addEventListener('click', (e) => {
+        if (e.target == modal) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Escape' && modal.classList.contains('show')) {
+            closeModal();
+        }
+    });
+
+    const modalTimerId = setTimeout(openModal, 6000);
+
+    function showModalByScroll() {
+        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            openModal();
+            window.removeEventListener('scroll', showModalByScroll);
+        }
+    }
+
+    window.addEventListener('scroll', showModalByScroll);
 
 });
